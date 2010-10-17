@@ -5,10 +5,9 @@ use warnings;
 use Signal::Handler::Exit;
 use Test::More;
 
-#From perlvar:
-sub ret {my $v = shift; $v >> 8;}
-sub core {my $v = shift; $v &= 128; $v ? 1 : 0} #Have to force conversion to boolean, since is() doesn't use boolean context
-sub sig_num {my $v =shift; $v & 127;}
+sub ret{Signal::Handler::Exit::ret(@_);}
+sub core{Signal::Handler::Exit::core(@_);}
+sub sig_num{Signal::Handler::Exit::sig_num(@_);}
 
 my $test_value_count = 3;
 sub test_value{
@@ -51,12 +50,14 @@ foreach (@manual_values) {
   test_value(@$_);
 }
 
-foreach (@manual_values) {
-  test_roundtrip($_->[0]);
-}
-
 is(
   Signal::Handler::Exit::exit_code(12,0,127),
   Signal::Handler::Exit::exit_code(12,0,127+128),
   "Truncate sig_num to 7 bits"
 );
+
+foreach (@manual_values) {
+  test_roundtrip($_->[0]);
+}
+
+
