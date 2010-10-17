@@ -22,7 +22,7 @@ my $test_roundtrip_count = 1;
 sub test_roundtrip{
   my $value = shift;
   is(
-    Signal::Handler::Exit::exitcode(
+    Signal::Handler::Exit::exit_code(
       ret($value),
       core($value),
       sig_num($value),
@@ -56,7 +56,7 @@ foreach (@manual_values) {
 }
 
 is(
-  Signal::Handler::Exit::exitcode(12,0,127),
-  Signal::Handler::Exit::exitcode(12,0,127+128),
+  Signal::Handler::Exit::exit_code(12,0,127),
+  Signal::Handler::Exit::exit_code(12,0,127+128),
   "Truncate sig_num to 7 bits"
 );

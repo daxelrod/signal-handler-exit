@@ -10,7 +10,7 @@ Returns the numeric exit status for the signal with number SIG_NUM.
 
 =cut
 
-=sub exitcode RETURN_CODE, CORE_DUMP, SIG_NUM
+=sub exit_code RETURN_CODE, CORE_DUMP, SIG_NUM
 
 Synthesize an exit code of the type in C<$?> or returned by the unix C<wait> call.
 
@@ -42,7 +42,7 @@ Only the lowest 7 bits of this value will be used.
 =back
 
 =cut
-sub exitcode {
+sub exit_code {
   my ($ret, $core, $sig_num) = @_;
   return ( ($ret << 8) | ($core ? 128 : 0) | ($sig_num & 127) );
 }
