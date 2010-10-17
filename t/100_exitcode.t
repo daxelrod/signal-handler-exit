@@ -43,7 +43,8 @@ my @manual_values = (
 plan tests =>
   $test_value_count * @manual_values +
   $test_roundtrip_count * @manual_values +
-  $standalone_tests
+  $standalone_tests +
+  $test_roundtrip_count * (1<<17)
 ;
 
 foreach (@manual_values) {
@@ -60,4 +61,6 @@ foreach (@manual_values) {
   test_roundtrip($_->[0]);
 }
 
-
+foreach (0..((1<<17)-1)) { #all 16-bit values
+  test_roundtrip($_);
+}
