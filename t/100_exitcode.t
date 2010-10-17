@@ -32,6 +32,8 @@ sub test_roundtrip{
   );
 }
 
+my $standalone_tests = 1;
+
 my @manual_values = (
   #value, ret, core, sig_num
   [130, 0, 1, 2], #SIGINT
@@ -41,7 +43,8 @@ my @manual_values = (
 
 plan tests =>
   $test_value_count * @manual_values +
-  $test_roundtrip_count * @manual_values
+  $test_roundtrip_count * @manual_values +
+  $standalone_tests
 ;
 
 foreach (@manual_values) {
@@ -51,3 +54,9 @@ foreach (@manual_values) {
 foreach (@manual_values) {
   test_roundtrip($_->[0]);
 }
+
+is(
+  Signal::Handler::Exit::exitcode(12,0,127),
+  Signal::Handler::Exit::exitcode(12,0,127+128),
+  "Truncate sig_num to 7 bits"
+);
