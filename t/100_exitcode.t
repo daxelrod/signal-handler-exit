@@ -18,21 +18,36 @@ sub test_value{
   is(sig_num($value), $sig_num, "sig_num for $value");
 }
 
-#my $test_roundtrip_count = $test_value_count;
-#sub test_roundtrip{
-#  my ($ret, $core, $sig_num) = @_;
-#  my $value = Signal::Handler::Exit::exitcode($ret, $core, $sig_num);
-#  test_value($value, $ret, $core, $sig_num);
-#}
+my $test_roundtrip_count = 1;
+sub test_roundtrip{
+  my $value = shift;
+  is(
+    Signal::Handler::Exit::exitcode(
+      ret($value),
+      core($value),
+      sig_num($value),
+    ),
+    $value,
+    "roundtrip for $value"
+  );
+}
 
-my @values = (
+my @manual_values = (
   #value, ret, core, sig_num
   [130, 0, 1, 2], #SIGINT
   [143, 0, 1, 15], #SIGTERM
   [131, 0, 1, 3], #SIGQUIT
 );
 
-plan tests => $test_value_count * @values;
-foreach (@values) {
+plan tests =>
+  $test_value_count * @manual_values +
+  $test_roundtrip_count * @manual_values
+;
+
+foreach (@manual_values) {
   test_value(@$_);
+}
+
+foreach (@manual_values) {
+  test_roundtrip($_->[0]);
 }
